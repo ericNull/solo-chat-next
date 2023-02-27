@@ -15,12 +15,22 @@ var config = {
 firebase.initializeApp(config);
 const db = firebase.firestore();
 
+export const getStaticProps = async () => {
+let returnData=[]
+let data = await db.collection("main_chat").get()
+let docs = data.docs;
+docs.forEach(element => {
+  returnData.push(element.data().message);
+});
 
+return {props:{data:returnData}}
+
+}
 let socketIo = io("http://localhost:4000",{ transports: ["websocket"] });
-export default function Home() {
+export default function Home({data}) {
   
  const [message, setMessage]=useState("");
- const [messages, setMessages]=useState([]);
+ const [messages, setMessages]=useState(data);
 
   function sendMessage(){
          console.log("entering");
