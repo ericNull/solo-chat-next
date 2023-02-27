@@ -26,8 +26,8 @@ export default function Home() {
          console.log("entering");
          socketIo.emit("message", {message});
          db.collection("main_chat").add({
-          message: message
-        //  timestamp: db.firestore.FieldValue.serverTimestamp()
+          message: message,
+         timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
          const node = document.getElementsByClassName('text');
          node[0].value = '';
