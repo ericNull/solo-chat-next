@@ -6,4 +6,8 @@
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
   overflow-y: auto;
+  margin-left: 50%;
+}
+.inputText {
+  margin-left: 50%;
 }

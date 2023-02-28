@@ -2,7 +2,8 @@ import { useState,useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.css";
+import { getAuth, signOut } from "firebase/auth";
 
 var config = {
   apiKey: "AIzaSyB9014wHsIBzRhLDvoSbwq3KsO4x8xOGtg",
@@ -14,6 +15,7 @@ var config = {
 };
 firebase.initializeApp(config);
 const db = firebase.firestore();
+const auth=getAuth();
 
 export const getStaticProps = async () => {
 let returnData=[]
@@ -32,9 +34,21 @@ export default function Home({data}) {
   
  const [message, setMessage]=useState("");
  const [messages, setMessages]=useState(data);
+ const [user, setUser]=useState('');
  useEffect(() => {
+  if(user!=''){
   scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }
 });
+useEffect(()=>{
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      setUser(user.uid);
+    } else {
+      setUser('');
+    }
+  })
+})
 
   function sendMessage(){
          console.log("entering");
@@ -48,7 +62,11 @@ export default function Home({data}) {
          setMessage(" ");
          
   }
-  socketIo.on("sentback", (payload)=>{setMessages([...messages, payload])})
+  socketIo.on("sentback", (payload)=>{setMessages([...messages, payload])});
+  function signout(){
+    signOut(auth)
+  }
+  if(user!=''){
   return (
   <div>
   <div className={styles.box}>
@@ -57,10 +75,12 @@ export default function Home({data}) {
 )
 }
 </div>
-  <input className ='text'type="text" name="message" placeholder="message to send" onChange={(e)=>setMessage(e.target.value)}/>
+  <input className ={`${styles.inputText} "text"`} type="text" name="message" placeholder="message to send" onChange={(e)=>setMessage(e.target.value)}/>
   <button onClick={sendMessage}>send message</button>
+  <button onClick={signout}>signout</button>
   </div>
-  )
+  )}
+  else{return <div> learn to login</div>}
 }
 
 
