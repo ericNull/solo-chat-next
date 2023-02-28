@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import styles from "../styles/Home.module.css";
 import { getAuth, signOut } from "firebase/auth";
+import Link from 'next/link';
 
 var config = {
   apiKey: "AIzaSyB9014wHsIBzRhLDvoSbwq3KsO4x8xOGtg",
@@ -49,16 +50,19 @@ useEffect(()=>{
     }
   })
 })
-
+  function goingdown(e){
+    if(e.key==="Enter"){
+      sendMessage();
+    }
+  }
   function sendMessage(){
-         console.log("entering");
          socketIo.emit("message", {message});
          db.collection("main_chat").add({
           message: message,
          timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
          const node = document.getElementsByClassName('text');
-         node[0].value = '';
+         node[0].value='';
          setMessage(" ");
          
   }
@@ -75,12 +79,17 @@ useEffect(()=>{
 )
 }
 </div>
-  <input className ={`${styles.inputText} "text"`} type="text" name="message" placeholder="message to send" onChange={(e)=>setMessage(e.target.value)}/>
-  <button onClick={sendMessage}>send message</button>
-  <button onClick={signout}>signout</button>
+  <input className ={`${styles.inputText} text`} type="text" name="message" placeholder="message to send"onKeyDown={(e)=>goingdown(e)} onChange={(e)=>setMessage(e.target.value)}/>
+  <div>
+  <button className={styles.button27} onClick={signout}role="button">signout</button>
+  </div>
   </div>
   )}
-  else{return <div> learn to login</div>}
+  else{return <div>
+    <Link href='/login'> <a className={styles.button27}>login</a></Link>
+    <div></div>
+    <Link href='/signup'> <a className={styles.button27}>signup</a></Link>
+  </div>}
 }
 
 

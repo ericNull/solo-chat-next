@@ -31,7 +31,7 @@ const route = useRouter()
   return (
     <div>
       <input name='email' className='email' onChange={(e)=>setEmail(e.target.value)}/>
-      <input name='password' className='password' onChange={(e)=>setPassword(e.target.value)}/>
+      <input type='password' name='password' className='password' onChange={(e)=>setPassword(e.target.value)}/>
       <button onClick={register}>login</button>
     </div>
   )
