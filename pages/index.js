@@ -36,6 +36,8 @@ export default function Home({data}) {
  const [message, setMessage]=useState("");
  const [messages, setMessages]=useState(data);
  const [user, setUser]=useState('');
+ const [socketid, setSocketid]=useState('');
+
  useEffect(() => {
   if(user!=''){
   scrollRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -66,6 +68,9 @@ useEffect(()=>{
          setMessage(" ");
          
   }
+  socketIo.on("connect",()=>{
+    console.log(socketIo.id);
+    setSocketid(socketIo.id)});
   socketIo.on("sentback", (payload)=>{setMessages([...messages, payload])});
   function signout(){
     signOut(auth)
@@ -79,6 +84,8 @@ useEffect(()=>{
 )
 }
 </div>
+  <div>socketid:{socketid} </div>
+  <div>user:{user}</div>
   <input className ={`${styles.inputText} text`} type="text" name="message" placeholder="message to send"onKeyDown={(e)=>goingdown(e)} onChange={(e)=>setMessage(e.target.value)}/>
   <div>
   <button className={styles.button27} onClick={signout}role="button">signout</button>
@@ -86,9 +93,9 @@ useEffect(()=>{
   </div>
   )}
   else{return <div>
-    <Link href='/login'> <a className={styles.button27}>login</a></Link>
+    <Link href='/login' className={styles.button27}>login</Link>
     <div></div>
-    <Link href='/signup'> <a className={styles.button27}>signup</a></Link>
+    <Link href='/signup'  className={styles.button27}>signup</Link>
   </div>}
 }
 
